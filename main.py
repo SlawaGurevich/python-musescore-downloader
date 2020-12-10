@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import (
     QApplication,
+    QCheckBox,
     QFileDialog,
     QGridLayout,
     QPushButton,
@@ -21,7 +22,11 @@ class Window(QWidget):
         self.iMusescoreUrl = QLineEdit()
         self.iMusescoreUrl.setPlaceholderText("Paste Musescore URL")
 
+        self.cbSaveImg = QCheckBox("Save Images")
+        self.cbSavePdf = QCheckBox("Save PDF")
+
         self.bDownload = QPushButton("Download")
+        self.bDownload.setEnabled(False)
 
         self.bSelectTargetFolder = QPushButton("Select")
         self.row = 0
@@ -35,6 +40,9 @@ class Window(QWidget):
         self.row += 1
         return self.row
 
+    def checkUrl(self):
+        self.bDownload.setEnabled(self.iMusescoreUrl.text() != "")
+
     def buildUi(self):
         self.iTargetFolder.setPlaceholderText("Please select a folder.")
 
@@ -42,13 +50,16 @@ class Window(QWidget):
         self.layout.addWidget(self.bSelectTargetFolder, self.inCurrentRow(), 2)
         self.layout.addWidget(self.iMusescoreUrl, self.inNextRow(), 0, 1, 3)
 
-        self.layout.addWidget(self.bDownload, self.inNextRow(), 1)
+        self.layout.addWidget(self.cbSaveImg, self.inNextRow(), 0)
+        self.layout.addWidget(self.cbSavePdf, self.inCurrentRow(), 1)
+        self.layout.addWidget(self.bDownload, self.inCurrentRow(), 2)
 
         self.setLayout(self.layout)
 
 
     def assignFunctions(self):
         self.bSelectTargetFolder.clicked.connect(self.selectFolder)
+        self.iMusescoreUrl.textChanged.connect(self.checkUrl)
 
     def selectFolder(self):
         folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
