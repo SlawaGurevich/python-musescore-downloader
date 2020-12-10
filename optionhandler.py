@@ -3,7 +3,7 @@ from configparser import ConfigParser
 class OptionHandler():
     def __init__(self):
         self.config = ConfigParser()
-        self.config.read('config.init')
+        self.config.read('config.ini')
         if not self.config.has_section("options"):
             self.config.add_section("options")
             with open('config.ini', 'w') as f:
@@ -12,7 +12,7 @@ class OptionHandler():
     def get(self, key):
         return self.config.get("options", key)
 
-    def write(self, key, value):
+    def set(self, key, value):
         self.config.set("options", key, value)
         with open('config.ini', 'w') as f:
             self.config.write(f)
@@ -21,3 +21,6 @@ class OptionHandler():
         self.config.remove_option(key)
         with open('config.ini', 'w') as f:
             self.config.write(f)
+
+    def has(self, key):
+        return self.config.has_option("options", key)

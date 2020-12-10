@@ -8,16 +8,20 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QWidget
 )
-
+from optionhandler import OptionHandler
 
 class Window(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.optionHandler = OptionHandler()
+
         self.layout = QGridLayout()
 
         self.iTargetFolder = QLineEdit()
         self.iTargetFolder.setReadOnly(False)
+        if self.optionHandler.has("targetDir"):
+            self.iTargetFolder.setText(self.optionHandler.get("targetDir"))
 
         self.iMusescoreUrl = QLineEdit()
         self.iMusescoreUrl.setPlaceholderText("Paste Musescore URL")
@@ -56,14 +60,15 @@ class Window(QWidget):
 
         self.setLayout(self.layout)
 
-
     def assignFunctions(self):
         self.bSelectTargetFolder.clicked.connect(self.selectFolder)
         self.iMusescoreUrl.textChanged.connect(self.checkUrl)
 
     def selectFolder(self):
         folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        print(folder)
+        if folder:
+            self.optionHandler.set("targetDir", folder)
+        self.iTargetFolder.setText(folder)
 
 
 if __name__ == '__main__':
