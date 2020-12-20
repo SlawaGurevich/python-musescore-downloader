@@ -1,4 +1,4 @@
-from selenium.webdriver import Chrome
+from selenium.webdriver import (Chrome, ChromeOptions)
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 
@@ -12,10 +12,13 @@ class Scraper():
         pass
 
     def scrape(self, links):
-        opts = Options()
+        # opts = Options()
+        chrome_options = ChromeOptions()
+        chrome_options.add_argument("window-size=1920,1080")
+        chrome_options.add_argument("--headless")
         # opts.headless = True
         # assert opts.headless
-        chrome = Chrome(options=opts)
+        chrome = Chrome(chrome_options=chrome_options)
         filesToDownload = []
 
         for ix, link in enumerate(links):
